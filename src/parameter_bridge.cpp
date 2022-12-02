@@ -239,6 +239,8 @@ int main(int argc, char * argv[])
   auto ros2_node = rclcpp::Node::make_shared("ros_bridge");
 
   // ROS 1 node
+  // do not pass ros2 parameters to ros1 and prevent argument evaluation later on which cannot cope with --ros-args
+  argc = 1;
   ros::init(argc, argv, "ros_bridge");
   ros::NodeHandle ros1_node;
 
