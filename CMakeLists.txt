@@ -31,7 +31,10 @@ endif()
 
 find_ros1_package(roscpp)
 if(NOT ros1_roscpp_FOUND)
-  message(WARNING "Failed to find ROS 1 roscpp, skipping...")
+  if(NOT ROS1_PACKAGES_UNAVAILABLE)
+    # Only warn if ROS1 packages were expected to be available
+    message(WARNING "Failed to find ROS 1 roscpp, skipping...")
+  endif()
   # call ament_package() to avoid ament_tools treating this as a plain CMake pkg
   ament_package(
     CONFIG_EXTRAS ${cmake_extras_files}
@@ -40,6 +43,10 @@ if(NOT ros1_roscpp_FOUND)
 endif()
 
 find_ros1_package(std_msgs REQUIRED)
+
+# Dependency that we should only look for if ROS 1 is installed (it's not present on a ROS 2
+# system; see https://github.com/ros2/ros1_bridge/pull/331#issuecomment-1188111510)
+find_package(xmlrpcpp REQUIRED)
 
 # find ROS 1 packages with messages / services
 include(cmake/find_ros1_interface_packages.cmake)
